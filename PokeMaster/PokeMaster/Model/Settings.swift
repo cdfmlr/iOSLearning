@@ -9,6 +9,7 @@
 import Foundation
 
 /// app 的偏好设置
+/// deprecated
 class Settings: ObservableObject {
     enum AccountBehavior: CaseIterable {
         case register, login

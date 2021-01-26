@@ -33,11 +33,14 @@ struct PokemonList: View {
                 }
             }
             .padding(.horizontal)
-        }.overlay(VStack {
-            Spacer()
-            PokemonInfoPanel(model: .sample(id: 1))
-        }).edgesIgnoringSafeArea(.bottom)
-            .resignKeyboardOnDragGesture()
+        }
+        /* .overlay(VStack {
+                     Spacer()
+                     PokemonInfoPanel(model: .sample(id: 1))
+                 })
+                .edgesIgnoringSafeArea(.bottom)
+         */
+        .resignKeyboardOnDragGesture()
     }
 }
 
