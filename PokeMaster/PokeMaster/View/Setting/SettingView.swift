@@ -35,18 +35,21 @@ struct SettingView: View {
     var accountSection: some View {
         Section(header: Text("账户")) {
             if settings.loginUser == nil { // 没登录
-                Picker(selection: settingsBinding.accountBehavior, label: Text("")) {
+                Picker(selection: settingsBinding.account.accountBehavior,
+                       label: Text("")) {
                     ForEach(AppState.Settings.AccountBehavior.allCases, id: \.self) {
                         Text($0.text)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
 
-                TextField("电子邮箱", text: settingsBinding.email)
-                SecureField("密码", text: settingsBinding.password)
+                TextField("电子邮箱", text: settingsBinding.account.email)
+                    .foregroundColor(settings.isEmailValid ? .green : .red)
 
-                if settings.accountBehavior == .register {
-                    SecureField("确认密码", text: settingsBinding.verifyPassword)
+                SecureField("密码", text: settingsBinding.account.password)
+
+                if settings.account.accountBehavior == .register {
+                    SecureField("确认密码", text: settingsBinding.account.verifyPassword)
                 }
 
                 if settings.loginRequesting {
@@ -56,13 +59,24 @@ struct SettingView: View {
                         style: .medium)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
-                    Button(settings.accountBehavior.text) {
-                        self.store.dispatch(
-                            .login(email: self.settings.email,
-                                   password: self.settings.password
+                    Button(settings.account.accountBehavior.text) {
+                        switch self.settings.account.accountBehavior {
+                        case .login:
+                            self.store.dispatch(
+                                .login(email: self.settings.account.email,
+                                       password: self.settings.account.password
+                                )
                             )
-                        )
-                    }.frame(maxWidth: .infinity, alignment: .center)
+                        case .register:
+                            self.store.dispatch(
+                                .register(email: self.settings.account.email,
+                                          password: self.settings.account.password
+                                )
+                            )
+                        }
+                    }
+                    .disabled(!settings.isPasswordValid)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
             } else { // 已登陆
                 HStack {
@@ -97,11 +111,24 @@ struct SettingView: View {
 
     var actionSection: some View {
         Section(header: Text("")) {
-            Button("清除缓存") {
-                print("清除缓存")
+            if settings.cacheCleaning {
+                ActivityIndicator(
+                    isAnimating: .constant(true),
+                    style: .medium)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                Button("清除缓存") {
+                    #if DEBUG
+                        print("清除缓存")
+                    #endif
+                    self.store.dispatch(.cacheClean)
+                }
+                .foregroundColor(.red)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .alert(isPresented: settingsBinding.cacheCleanDone) {
+                    Alert(title: Text("缓存已清理"))
+                }
             }
-            .foregroundColor(.red)
-            .frame(maxWidth: .infinity, alignment: .center)
         }
     }
 }
@@ -114,7 +141,7 @@ struct SettingView_Previews: PreviewProvider {
 //            email: "foo@bar.com",
 //            favoritePokemonIDs: [1, 2, 3]
 //        )
-        store.appState.settings.loginRequesting = true
+//        store.appState.settings.loginRequesting = true
 
         return SettingView().environmentObject(store)
     }

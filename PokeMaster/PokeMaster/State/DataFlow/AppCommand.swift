@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import Kingfisher
 
 protocol AppCommand {
     /// 执行副作用的入口
@@ -65,7 +66,8 @@ extension AnyCancellable {
 
 /// 把登陆用户 loginUser 持久化，写到硬盘
 ///
-/// DON'T USE THIS: 这是个纯副作用，不需要改变状态。
+/// ⚠️ DON'T USE THIS:
+/// 这是个纯副作用，不需要改变状态。
 /// 对于纯副作用，可以允许不严格定义 Command 走整个单向流程，
 /// 可以用 `didSet`跳过严格的 Command 流程，来执行这个副作用。
 struct WriteUserAppCommand: AppCommand {
@@ -77,5 +79,75 @@ struct WriteUserAppCommand: AppCommand {
             to: .documentDirectory,
             fileName: "user.json"
         )
+    }
+}
+
+struct LoadPokemonsCommand: AppCommand {
+    func execute(in store: Store) {
+        let token = SubscriptionToken()
+        LoadPokemonRequest.all
+            .sink(
+                receiveCompletion: { complete in
+                    if case let .failure(error) = complete {
+                        store.dispatch(
+                            .loadPokemonsDone(result: .failure(error))
+                        )
+                    }
+                    token.unseal()
+                },
+                receiveValue: { value in
+                    store.dispatch(
+                        .loadPokemonsDone(result: .success(value))
+                    )
+                }
+            ).seal(in: token)
+    }
+}
+
+struct RegisterAppCommand: AppCommand {
+    let email: String
+    let password: String
+
+    func execute(in store: Store) {
+        let token = SubscriptionToken()
+        
+        #if DEBUG
+        print("[Register]: \(email) \(password)")
+        #endif
+
+        RegisterRequest(
+            email: email,
+            password: password
+        ).publisher
+            .sink(
+                receiveCompletion: { complete in
+                    if case let .failure(error) = complete {
+                        store.dispatch(
+                            .accountBehaviorDone(result: .failure(error))
+                        )
+                    }
+                    token.unseal()
+                },
+                receiveValue: { user in
+                    store.dispatch(
+                        .accountBehaviorDone(result: .success(user))
+                    )
+                })
+            .seal(in: token)
+    }
+}
+
+struct CacheCleanAppCommand: AppCommand {
+    func execute(in store: Store) {
+        try? FileHelper.delete(from: .cachesDirectory, fileName: "pokemons.json")
+        Kingfisher.ImageCache.default.clearDiskCache {  // async
+            #if DEBUG
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                store.dispatch(.cleanCacheDone)
+            }
+            #else
+            store.dispatch(.cleanCacheDone)
+            #endif
+        }
     }
 }

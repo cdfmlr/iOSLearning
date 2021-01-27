@@ -11,6 +11,8 @@ import SwiftUI
 struct PokemonList: View {
     @State var expandingIndex: Int?
     @State var searching: String = ""
+    
+    @EnvironmentObject var store: Store
 
     var body: some View {
 //        List(PokemonViewModel.all) { pokemon in
@@ -19,7 +21,7 @@ struct PokemonList: View {
         ScrollView {
             SearchView()
 
-            ForEach(PokemonViewModel.all) { pokemon in
+            ForEach(store.appState.pokemonList.allPokemonsByID) { pokemon in
                 PokemonInfoRow(
                     model: pokemon,
                     expanded: self.expandingIndex == pokemon.id
@@ -46,6 +48,6 @@ struct PokemonList: View {
 
 struct PokemonList_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonList()
+        PokemonList().environmentObject(Store())
     }
 }

@@ -43,6 +43,10 @@ extension String {
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: self)
     }
+    
+    var isValidPassword: Bool {
+        return self.count > 3
+    }
 }
 
 let appDecoder: JSONDecoder = {

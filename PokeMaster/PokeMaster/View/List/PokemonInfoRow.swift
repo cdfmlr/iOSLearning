@@ -6,6 +6,7 @@
 //  Copyright © 2021 OneV's Den. All rights reserved.
 //
 
+import KingfisherSwiftUI
 import SwiftUI
 
 struct PokemonInfoRow: View {
@@ -19,7 +20,8 @@ struct PokemonInfoRow: View {
         VStack {
             // 图片、名字
             HStack {
-                Image("Pokemon-\(model.id)")
+                // Image("Pokemon-\(model.id)")
+                KFImage(model.iconImageURL)
                     .resizable()
                     .frame(width: 50, height: 50)
                     .aspectRatio(contentMode: .fit)
