@@ -11,19 +11,23 @@ import SwiftUI
 struct PokemonRootView: View {
     @EnvironmentObject var store: Store
 
+    var pokemonList: AppState.PokemonList {
+        store.appState.pokemonList
+    }
+
     var body: some View {
         NavigationView {
-            if store.appState.pokemonList.loadPokemonsError != nil {
+            if pokemonList.loadPokemonsError != nil {
                 VStack {
                     Text("加载失败").font(.headline)
-                    Text(store.appState.pokemonList.loadPokemonsError!.localizedDescription)
+                    Text(pokemonList.loadPokemonsError!.localizedDescription)
                     RetryButton {
                         self.store.dispatch(
                             .loadPokemons
                         )
                     }
                 }.foregroundColor(.gray)
-            } else if store.appState.pokemonList.pokemons == nil {
+            } else if pokemonList.pokemons == nil {
                 VStack {
                     ActivityIndicator(isAnimating: .constant(true), style: .medium)
                     Text("Loading...").onAppear {

@@ -76,7 +76,7 @@ class Store: ObservableObject {
             }
             appState.pokemonList.loadingPokemons = true
             appState.pokemonList.loadPokemonsError = nil
-            
+
             appCommand = LoadPokemonsCommand()
         case let .loadPokemonsDone(result):
             switch result {
@@ -98,6 +98,35 @@ class Store: ObservableObject {
         case .cleanCacheDone:
             appState.settings.cacheCleaning = false
             appState.settings.cacheCleanDone = true
+
+        case let .toggleListSelection(index):
+            if appState.pokemonList.dynamic.expandingIndex != index {
+                appState.pokemonList.dynamic.expandingIndex = index
+                appState.pokemonList.dynamic.panelIndex = index
+            } else {
+                appState.pokemonList.dynamic.expandingIndex = nil
+                appState.pokemonList.dynamic.panelPresented = false
+            }
+        case let .loadAbilities(pokemon):
+            appCommand = loadAbilitiesCommand(pokemon: pokemon)
+        case let .loadAbilitiesDone(result):
+            switch result {
+            case let .success(viewModels):
+                var abilities = appState.pokemonList.abilities ?? [:]
+
+                for ability in viewModels {
+                    abilities[ability.id] = ability
+                }
+
+                appState.pokemonList.abilities = abilities
+
+            case let .failure(error):
+                print(error)
+            }
+        case let .togglePanelPresenting(presenting):
+            appState.pokemonList.dynamic.panelPresented = presenting
+        case .closeSafariView:
+            appState.pokemonList.isSFViewActive = false
         }
 
         return (appState, appCommand)

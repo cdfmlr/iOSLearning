@@ -9,29 +9,38 @@
 import SwiftUI
 
 struct PokemonList: View {
-    @State var expandingIndex: Int?
-    @State var searching: String = ""
+//    @State var expandingIndex: Int?
+//    @State var searchText: String = ""
     
     @EnvironmentObject var store: Store
+    
+    var pokemonList: AppState.PokemonList {
+        store.appState.pokemonList
+    }
+    
+    var pokemonListBinding: Binding<AppState.PokemonList> {
+        $store.appState.pokemonList
+    }
 
     var body: some View {
 //        List(PokemonViewModel.all) { pokemon in
 //            PokemonInfoRow(model: pokemon)
 //        }
         ScrollView {
-            SearchView()
+            SearchView(searchText: self.pokemonListBinding.dynamic.searchText)
 
-            ForEach(store.appState.pokemonList.allPokemonsByID) { pokemon in
+            ForEach(pokemonList.allPokemonsByID) { pokemon in
                 PokemonInfoRow(
                     model: pokemon,
-                    expanded: self.expandingIndex == pokemon.id
+                    expanded: self.pokemonList.dynamic.expandingIndex == pokemon.id
                 )
                 .onTapGesture {
-                    if self.expandingIndex == pokemon.id {
-                        self.expandingIndex = nil
-                    } else {
-                        self.expandingIndex = pokemon.id
-                    }
+                    self.store.dispatch(
+                        .toggleListSelection(index: pokemon.id)
+                    )
+                    self.store.dispatch(
+                        .loadAbilities(pokemon: pokemon.pokemon)
+                    )
                 }
             }
             .padding(.horizontal)
@@ -42,7 +51,7 @@ struct PokemonList: View {
                  })
                 .edgesIgnoringSafeArea(.bottom)
          */
-        .resignKeyboardOnDragGesture()
+        .resignKeyboardOnDragGesture() // 滑动关闭搜索键盘
     }
 }
 

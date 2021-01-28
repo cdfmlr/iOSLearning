@@ -11,7 +11,7 @@ import SwiftUI
 /// Search Bar
 /// from https://stackoverflow.com/a/58473985
 struct SearchView: View {
-    @State private var searchText = ""
+    @Binding var searchText: String
     @State private var showCancelButton: Bool = false
     
     var body: some View {
@@ -19,7 +19,7 @@ struct SearchView: View {
             HStack {
                 Image(systemName: "magnifyingglass")
 
-                TextField("Search...", text: $searchText, onEditingChanged: { _ in
+                TextField("Search", text: $searchText, onEditingChanged: { _ in
                     self.showCancelButton = true
                 }, onCommit: {
                     print("onCommit")
@@ -77,8 +77,8 @@ extension View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            SearchView().environment(\.colorScheme, .light)
-            SearchView().environment(\.colorScheme, .dark)
+            SearchView(searchText: .constant("")).environment(\.colorScheme, .light)
+            SearchView(searchText: .constant("hello")).environment(\.colorScheme, .dark)
         }
     }
 }

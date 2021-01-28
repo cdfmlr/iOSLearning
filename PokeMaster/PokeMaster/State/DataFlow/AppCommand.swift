@@ -110,9 +110,9 @@ struct RegisterAppCommand: AppCommand {
 
     func execute(in store: Store) {
         let token = SubscriptionToken()
-        
+
         #if DEBUG
-        print("[Register]: \(email) \(password)")
+            print("[Register]: \(email) \(password)")
         #endif
 
         RegisterRequest(
@@ -140,14 +140,57 @@ struct RegisterAppCommand: AppCommand {
 struct CacheCleanAppCommand: AppCommand {
     func execute(in store: Store) {
         try? FileHelper.delete(from: .cachesDirectory, fileName: "pokemons.json")
-        Kingfisher.ImageCache.default.clearDiskCache {  // async
+        Kingfisher.ImageCache.default.clearDiskCache { // async
             #if DEBUG
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                store.dispatch(.cleanCacheDone)
-            }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    store.dispatch(.cleanCacheDone)
+                }
             #else
-            store.dispatch(.cleanCacheDone)
+                store.dispatch(.cleanCacheDone)
             #endif
         }
+    }
+}
+
+struct loadAbilitiesCommand: AppCommand {
+    let pokemon: Pokemon
+
+    func execute(in store: Store) {
+        let token = SubscriptionToken()
+
+        #if DEBUG
+            print("[loadAbilitiesCommand]: \(pokemon)")
+        #endif
+
+        pokemon.abilities
+            .filter { ability in
+                if let abilities = store.appState.pokemonList.abilities {
+                    return abilities[ability.ability.url.extractedID!] == nil
+                }
+                return true
+            }
+            .map {
+                AbilityRequest(ability: $0).publisher
+            }
+            .zipAll
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { complete in
+                    if case let .failure(error) = complete {
+                        store.dispatch(
+                            .loadAbilitiesDone(result: .failure(error))
+                        )
+                    }
+                    token.unseal()
+                },
+                receiveValue: { viewModels in
+                    if viewModels.isEmpty { // fast lane
+                        return
+                    }
+                    store.dispatch(
+                        .loadAbilitiesDone(result: .success(viewModels))
+                    )
+                })
+            .seal(in: token)
     }
 }

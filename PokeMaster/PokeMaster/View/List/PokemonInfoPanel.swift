@@ -9,20 +9,19 @@
 import SwiftUI
 
 struct PokemonInfoPanel: View {
+    @EnvironmentObject var store: Store
+    
     let model: PokemonViewModel
     
     @State var darkBlur = false
 
     var abilities: [AbilityViewModel] {
-        AbilityViewModel.sample(pokemonID: model.id)
+        // AbilityViewModel.sample(pokemonID: model.id)
+        store.appState.pokemonList.abilityViewModels(for: model.pokemon) ?? []
     }
 
     var body: some View {
         VStack(spacing: 20) {
-            Button("切换模糊效果") {
-                self.darkBlur.toggle()
-            }
-            
             topIndicator
 
             Header(model: model)
@@ -32,6 +31,15 @@ struct PokemonInfoPanel: View {
             Divider()
 
             AbilityList(model: model, abilityModels: abilities)
+            
+            Button(action: {
+                self.darkBlur.toggle()
+            }) {
+                Image(systemName: self.darkBlur ? "sun.max.fill" : "moon")
+            }
+            
+            Spacer().frame(width: 0, height: 16, alignment: .center)
+            
         }.padding(EdgeInsets(
             top: 12, leading: 30, bottom: 30, trailing: 30
         ))
@@ -194,8 +202,21 @@ extension PokemonInfoPanel {
     }
 }
 
+struct PokemonInfoPanelOverlay: View {
+    let model: PokemonViewModel
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            PokemonInfoPanel(model: model)
+        }
+        .edgesIgnoringSafeArea(.bottom)
+    }
+}
+
 struct PokemonInfoPanel_Previews: PreviewProvider {
     static var previews: some View {
         PokemonInfoPanel(model: .sample(id: 1))
+            .environmentObject(Store())
     }
 }

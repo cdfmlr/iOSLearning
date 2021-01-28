@@ -33,6 +33,9 @@
 		02E4C11725BFBB8D00632A29 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E4C11625BFBB8D00632A29 /* ActivityIndicator.swift */; };
 		02E4C11925BFC09100632A29 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E4C11825BFC09100632A29 /* UserDefault.swift */; };
 		02F15DA325C1A0F6003DB91A /* RetryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F15DA225C1A0F6003DB91A /* RetryButton.swift */; };
+		02F15DA525C267AA003DB91A /* AbilityRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F15DA425C267AA003DB91A /* AbilityRequest.swift */; };
+		02F15DA725C2A916003DB91A /* OverlaySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F15DA625C2A916003DB91A /* OverlaySheet.swift */; };
+		02F15DA925C2C47E003DB91A /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F15DA825C2C47E003DB91A /* SafariView.swift */; };
 		D1320AD523178614006F02A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1320A7D23178614006F02A6 /* Assets.xcassets */; };
 		D1320AD623178614006F02A6 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1320A7F23178614006F02A6 /* FileHelper.swift */; };
 		D1320AD723178614006F02A6 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1320A8023178614006F02A6 /* Sample.swift */; };
@@ -137,6 +140,9 @@
 		02E4C11625BFBB8D00632A29 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		02E4C11825BFC09100632A29 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		02F15DA225C1A0F6003DB91A /* RetryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryButton.swift; sourceTree = "<group>"; };
+		02F15DA425C267AA003DB91A /* AbilityRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbilityRequest.swift; sourceTree = "<group>"; };
+		02F15DA625C2A916003DB91A /* OverlaySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlaySheet.swift; sourceTree = "<group>"; };
+		02F15DA825C2C47E003DB91A /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		4B9EAF6823162D9900B72082 /* PokeMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokeMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1320A7D23178614006F02A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D1320A7F23178614006F02A6 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
@@ -257,6 +263,8 @@
 				021E796B25B686EB00B70925 /* BlurView.swift */,
 				02E4C11625BFBB8D00632A29 /* ActivityIndicator.swift */,
 				02F15DA225C1A0F6003DB91A /* RetryButton.swift */,
+				02F15DA625C2A916003DB91A /* OverlaySheet.swift */,
+				02F15DA825C2C47E003DB91A /* SafariView.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -319,6 +327,7 @@
 				0285186625C0023E0044F11E /* EmailCheckingRequest.swift */,
 				0285186825C102C10044F11E /* LoadPokemonRequest.swift */,
 				0285187B25C1471D0044F11E /* RegisterRequest.swift */,
+				02F15DA425C267AA003DB91A /* AbilityRequest.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -662,6 +671,8 @@
 				0236471625B533C600F287DE /* PokemonInfoRow.swift in Sources */,
 				021E797025B6905800B70925 /* Settings.swift in Sources */,
 				02E4C11525BFB33A00632A29 /* FileStorage.swift in Sources */,
+				02F15DA725C2A916003DB91A /* OverlaySheet.swift in Sources */,
+				02F15DA525C267AA003DB91A /* AbilityRequest.swift in Sources */,
 				0287EEAD25BEEC68005C1A9A /* AppCommand.swift in Sources */,
 				D1320AD723178614006F02A6 /* Sample.swift in Sources */,
 				D1320B1923178614006F02A6 /* AbilityViewModel.swift in Sources */,
@@ -674,6 +685,7 @@
 				021E796C25B686EB00B70925 /* BlurView.swift in Sources */,
 				0285186925C102C10044F11E /* LoadPokemonRequest.swift in Sources */,
 				D1320B2023178614006F02A6 /* ContentView.swift in Sources */,
+				02F15DA925C2C47E003DB91A /* SafariView.swift in Sources */,
 				0287EEAB25BED409005C1A9A /* AppError.swift in Sources */,
 				D1320B1A23178614006F02A6 /* PokemonViewModel.swift in Sources */,
 				02E4C11725BFBB8D00632A29 /* ActivityIndicator.swift in Sources */,

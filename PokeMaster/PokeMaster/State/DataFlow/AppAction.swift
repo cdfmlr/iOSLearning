@@ -19,4 +19,13 @@ enum AppAction {
     case register(email: String, password: String)
     case cacheClean
     case cleanCacheDone
+    /// 切换 cell 展开状态
+    case toggleListSelection(index: Int?)
+    /// 加载技能
+    case loadAbilities(pokemon: Pokemon)
+    /// 技能加载结束
+    case loadAbilitiesDone(result: Result<[AbilityViewModel], AppError>)
+    
+    case togglePanelPresenting(presenting: Bool)
+    case closeSafariView
 }

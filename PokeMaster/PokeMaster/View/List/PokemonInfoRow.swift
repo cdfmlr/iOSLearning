@@ -10,11 +10,15 @@ import KingfisherSwiftUI
 import SwiftUI
 
 struct PokemonInfoRow: View {
+    @EnvironmentObject var store: Store
+
     /// View Model
     let model: PokemonViewModel
     /// 展开按钮
     // @State var expanded: Bool = false
     let expanded: Bool
+
+//    @State var isSFViewActive = false
 
     var body: some View {
         VStack {
@@ -54,17 +58,35 @@ struct PokemonInfoRow: View {
                         .modifier(ToolButtonModifier())
                 }
                 Button(action: {
-                    print("panel")
+                    let target = !self.store.appState.pokemonList.dynamic.panelPresented
+                    self.store.dispatch(
+                        .togglePanelPresenting(presenting: target)
+                    )
                 }) {
                     Image(systemName: "chart.bar")
                         .modifier(ToolButtonModifier())
                 }
-                Button(action: {
-                    print("web")
-                }) {
-                    Image(systemName: "info.circle")
-                        .modifier(ToolButtonModifier())
-                }
+//                Button(action: {
+//                    print("web")
+//                }) {
+//                    Image(systemName: "info.circle")
+//                        .modifier(ToolButtonModifier())
+//                }
+                NavigationLink(
+                    destination: SafariView(url: model.detailPageURL) {
+                        self.store.dispatch(.closeSafariView)
+                    }
+                    .navigationBarTitle(
+                        Text(model.name),
+                        displayMode: .inline
+                    ),
+                    isActive: expanded ?
+                        $store.appState.pokemonList.isSFViewActive : .constant(false),
+                    label: {
+                        Image(systemName: "info.circle")
+                            .modifier(ToolButtonModifier())
+                    }
+                )
             }
             .padding(.bottom, 12)
             .opacity(expanded ? 1.0 : 0.0)
@@ -116,6 +138,6 @@ struct PokemonInfoRow_Previews: PreviewProvider {
             PokemonInfoRow(model: .sample(id: 1), expanded: false)
             PokemonInfoRow(model: .sample(id: 21), expanded: true)
             PokemonInfoRow(model: .sample(id: 25), expanded: false)
-        }
+        }.environmentObject(Store())
     }
 }
