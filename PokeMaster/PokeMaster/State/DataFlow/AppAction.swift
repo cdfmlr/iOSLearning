@@ -28,4 +28,8 @@ enum AppAction {
     
     case togglePanelPresenting(presenting: Bool)
     case closeSafariView
+    /// 显示对话框，请求登陆
+    case requireLogin
+    /// 转去设置页面登陆
+    case toLogin
 }

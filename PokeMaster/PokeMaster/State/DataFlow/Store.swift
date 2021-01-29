@@ -60,6 +60,12 @@ class Store: ObservableObject {
             switch result {
             case let .success(user):
                 appState.settings.loginUser = user
+                
+                // 是 List 那边要求登陆的，登陆成功了就给他转回去
+                if appState.pokemonList.requireLogin {
+                    appState.pokemonList.requireLogin = false
+                    appState.mainTab.selection = .list
+                }
             case let .failure(error):
                 print("error: \(error)")
                 appState.settings.loginError = error
@@ -127,6 +133,11 @@ class Store: ObservableObject {
             appState.pokemonList.dynamic.panelPresented = presenting
         case .closeSafariView:
             appState.pokemonList.isSFViewActive = false
+        case .requireLogin:
+            appState.pokemonList.showLoginRequiredAlert = true
+        case .toLogin:
+            appState.pokemonList.requireLogin = true
+            appState.mainTab.selection = .settings
         }
 
         return (appState, appCommand)

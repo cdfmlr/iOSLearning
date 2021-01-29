@@ -218,6 +218,11 @@ extension AppState {
         var dynamic = Dynamic()
         
         var isSFViewActive = false
+        
+        var showLoginRequiredAlert = false
+        
+        /// List 要求了登陆，登陆成功后支持自动从 Settings 跳回 List 页
+        var requireLogin: Bool = false
     }
 }
 

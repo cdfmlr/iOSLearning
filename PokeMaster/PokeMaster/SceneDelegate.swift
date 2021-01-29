@@ -64,8 +64,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         switch (components.scheme, components.host) {
+        // pokemaster://showPanel?id={id}
         case ("pokemaster", "showPanel"):
-            // pokemaster://showPanel?id={id}
             guard let idQuery = (components.queryItems?.first { $0.name == "id" }),
                   let idString = idQuery.value,
                   let id = Int(idString),
@@ -76,6 +76,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 panelIndex: id,
                 panelPresented: true
             )
+        // pokemaster://userRegister?email=foobar@example.com
+        case ("pokemaster", "userRegister"):
+            guard let emailQuery = (components.queryItems?.first { $0.name == "email" }),
+                  let email = emailQuery.value,
+                  email.isValidEmailAddress
+            else { break }
+            
+            // 没登陆的
+            if store.appState.settings.loginUser == nil {
+                // 打开设置页
+                store.appState.mainTab.selection = .settings
+                // 选择注册
+                store.appState.settings.account.accountBehavior = .register
+                // 输入邮箱
+                store.appState.settings.account.email = email
+            }
+
         default: break
         }
 

@@ -28,6 +28,16 @@
 				<string>pokemaster</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>userRegister</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pokemaster</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

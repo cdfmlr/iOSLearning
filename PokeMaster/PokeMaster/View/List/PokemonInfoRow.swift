@@ -52,10 +52,21 @@ struct PokemonInfoRow: View {
             HStack(spacing: expanded ? 20 : -30) {
                 Spacer()
                 Button(action: {
-                    print("fav")
+                    if self.store.appState.settings.loginUser == nil {
+                        self.store.dispatch(.requireLogin)
+                    } else {
+                        print("fav")
+                    }
                 }) {
                     Image(systemName: "star")
                         .modifier(ToolButtonModifier())
+                }.alert(isPresented: $store.appState.pokemonList.showLoginRequiredAlert) {
+                    Alert(title: Text("需要登陆"),
+                          primaryButton: .default(Text("去登陆")) {
+                              self.store.dispatch(.toLogin)
+                          },
+                          secondaryButton: .cancel()
+                    )
                 }
                 Button(action: {
                     let target = !self.store.appState.pokemonList.dynamic.panelPresented
